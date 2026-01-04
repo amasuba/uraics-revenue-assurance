@@ -9,6 +9,7 @@ import TaxVeritas from "./pages/TaxVeritas";
 import AuditTasks from "./pages/AuditTasks";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import RiskDashboard from "./pages/RiskDashboard";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,8 @@ const App = () => (
           <Route path="/taxveritas" element={<TaxVeritas />} />
           <Route path="/audit-tasks" element={<AuditTasks />} />
           <Route path="/admin" element={<Admin />} />
+          {/* --- Generic dynamic risk dashboard for ALL risks --- */}
+          <Route path="/risk/:id" element={<RiskDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

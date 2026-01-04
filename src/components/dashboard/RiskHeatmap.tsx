@@ -36,6 +36,9 @@ export function RiskHeatmap() {
                 getSeverityClass(risk.severity)
               )}
               title={`${risk.name}\nExposure: ${formatCurrency(risk.totalExposure)}\nCases: ${risk.flaggedCount}`}
+              onClick={() => {
+                window.location.assign(`/risk/${risk.id}`);
+              }}
             >
               <div className="text-center">
                 <p className="text-lg font-bold uppercase">Risk {risk.id}</p>
