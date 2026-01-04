@@ -80,7 +80,7 @@ const TATIS360 = () => {
     {
       id: "1",
       role: "assistant",
-      content: "Hello! I'm **TATIS360**, your Tax Audit Intelligence assistant. I can help you analyze risks, find taxpayer information, and provide insights from the URAICS database.\n\nHow can I assist you today?",
+      content: "Hello! I'm TATIS360, your Tax Audit Intelligence Assistant. I can help you analyze risks, find taxpayer information, and provide insights from the URAICS database.\n\nHow can I assist you today?",
       timestamp: new Date(),
     },
   ]);
