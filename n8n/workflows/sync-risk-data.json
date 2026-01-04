@@ -1,0 +1,86 @@
+{
+  "name": "Sync Risk Data (All Risk Types)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger (Hourly)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM RTN_RETURNS_REGISTER WHERE RTN_STATUS IN ('APRV', 'BRNAPRV', 'ASMT')",
+        "options": {}
+      },
+      "id": "fetch-returns",
+      "name": "Fetch Returns from Oracle",
+      "type": "n8n-nodes-base.oracle",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process risk data and create relationships\nconst items = $input.all();\nconst riskData = [];\n\nfor (const item of items) {\n  // Risk detection logic here\n  // This will be expanded for each risk type (a-s)\n  riskData.push({\n    tin: item.json.TIN_NO,\n    riskId: 'p', // Example: presumptive tax risk\n    exposure: item.json.TAX_PAYABLE || 0,\n    flagged: item.json.TOTAL_SALES > 150000000\n  });\n}\n\nreturn riskData.map(data => ({ json: data }));"
+      },
+      "id": "process-risks",
+      "name": "Process Risk Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "relationship",
+        "relationshipType": "HAS_RISK",
+        "fromLabels": ["Taxpayer"],
+        "toLabels": ["Risk"],
+        "fromProperty": "tin",
+        "toProperty": "riskId",
+        "properties": {
+          "exposure": "={{ $json.exposure }}",
+          "flaggedDate": "={{ $now }}",
+          "status": "={{ $json.flagged ? 'flagged' : 'compliant' }}"
+        }
+      },
+      "id": "create-relationships",
+      "name": "Create Risk Relationships",
+      "type": "n8n-nodes-base.neo4j",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger (Hourly)": {
+      "main": [[{ "node": "Fetch Returns from Oracle", "type": "main", "index": 0 }]]
+    },
+    "Fetch Returns from Oracle": {
+      "main": [[{ "node": "Process Risk Data", "type": "main", "index": 0 }]]
+    },
+    "Process Risk Data": {
+      "main": [[{ "node": "Create Risk Relationships", "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-15T00:00:00.000Z",
+  "versionId": "1"
+}
+

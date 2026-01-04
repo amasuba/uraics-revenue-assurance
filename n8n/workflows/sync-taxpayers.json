@@ -1,0 +1,49 @@
+{
+  "name": "Sync Taxpayers from Oracle to Neo4j",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT TIN_NO, TAX_PAYER_NAME, JURISDICTION_LOCATION_ID FROM REG_TAX_PAYER_MST WHERE REG_STATUS = 'REGD'",
+        "options": {}
+      },
+      "id": "oracle-fetch",
+      "name": "Fetch Taxpayers from Oracle",
+      "type": "n8n-nodes-base.oracle",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "node",
+        "labels": ["Taxpayer"],
+        "properties": {
+          "tin": "={{ $json.TIN_NO }}",
+          "name": "={{ $json.TAX_PAYER_NAME }}",
+          "region": "={{ $json.REGION_NAME }}"
+        }
+      },
+      "id": "neo4j-create",
+      "name": "Create Taxpayer Nodes in Neo4j",
+      "type": "n8n-nodes-base.neo4j",
+      "typeVersion": 1,
+      "position": [450, 300]
+    }
+  ],
+  "connections": {
+    "Fetch Taxpayers from Oracle": {
+      "main": [[{ "node": "Create Taxpayer Nodes in Neo4j", "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-15T00:00:00.000Z",
+  "versionId": "1"
+}
+

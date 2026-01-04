@@ -1,0 +1,31 @@
+{
+  "name": "uraics-backend",
+  "version": "1.0.0",
+  "description": "URAICS Revenue Assurance Backend API",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "oracledb": "^6.0.3",
+    "neo4j-driver": "^5.15.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0"
+  },
+  "keywords": [
+    "uraics",
+    "tax",
+    "revenue",
+    "assurance"
+  ],
+  "author": "URAICS",
+  "license": "MIT"
+}
+
